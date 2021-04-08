@@ -15,26 +15,26 @@ $.allowedUrls = [];
 // Override the send to store our ajax request time and abort ones that are
 // within our throttle time
 jQuery(document).ajaxSend(function(event, xhr, settings) {
-      // check if this is an allowed url
-      for (let i = 0; i < $.allowedUrls.length; i++) {
-        if (settings.url.indexOf($.allowedUrls[i]) !== -1) {
-          return;
-        }
-      }
-      // we have made this request before and we are posting
-      if ($.ajaxRequests[settings.url] != undefined) {
-        // if our request is still pending or the throttle time has not passed
-        // then stop the request
-        if (($.ajaxRequests[settings.url].responseTime + $.ajaxThrottle) > Date.now() || $.ajaxRequests[settings.url].responseTime == 0) {
-          xhr.abort();
-          return false;
-        }
-      }
-      $.ajaxRequests[settings.url] = {
-        requestTime : Date.now(),
-        responseTime : 0
-      };
-    });
+  // check if this is an allowed url
+  for (let i = 0; i < $.allowedUrls.length; i++) {
+    if (settings.url.indexOf($.allowedUrls[i]) !== -1) {
+      return;
+    }
+  }
+  // we have made this request before and we are posting
+  if ($.ajaxRequests[settings.url] != undefined) {
+    // if our request is still pending or the throttle time has not passed
+    // then stop the request
+    if (($.ajaxRequests[settings.url].responseTime + $.ajaxThrottle) > Date.now() || $.ajaxRequests[settings.url].responseTime == 0) {
+      xhr.abort();
+      return false;
+    }
+  }
+  $.ajaxRequests[settings.url] = {
+    requestTime : Date.now(),
+    responseTime : 0
+  };
+});
 
 // Override the complete to store our ajax request completed time
 jQuery(document).ajaxComplete(function(event, xhr, settings) {
@@ -65,8 +65,7 @@ $.ajax = function(options) {
     };
     // override error callback with custom implementation
     options.error = customErrorHandler;
-  }
-  ;
+  };
   // call original ajax function with modified arguments
   $_ajax.apply($, arguments);
 };
